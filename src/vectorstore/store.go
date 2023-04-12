@@ -27,6 +27,14 @@ func PersistentVectorStore(path string) *VectorStore {
 	return &store
 }
 
+func (store *VectorStore) Insert(entry dataEntry) {
+	store.data = append(store.data, entry)
+}
+
+func (store *VectorStore) Remove(index int) {
+	store.data = append(store.data[:index], store.data[index+1:]...)
+}
+
 func (store *VectorStore) SimilaritySearch(query []float32, n int) []dataEntry {
 	result := []dataEntry{}
 	for _, entry := range store.getTopNVectors(query, n) {

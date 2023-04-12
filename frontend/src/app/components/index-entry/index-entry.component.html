@@ -1,0 +1,23 @@
+<div class="w-full h-32 border shadow-md rounded-md p-4 font-medium flex items-center justify-between">
+  <dl>
+    <dt class="text-2xl font-bold">{{indexName}}</dt>
+    <app-index-status [status]="indexStatus.Online"></app-index-status>
+    <a class="text-gray-600 hover:underline" [href]="url">{{url}}</a>
+  </dl>
+
+  <div class="flex items-center">
+    <dl class="w-24 p-4 border-r-2">
+      <dt class="text-xl font-bold">Entries</dt>
+      <dd class="text-gray-600">{{entries}}</dd>
+    </dl>
+    <dl class="w-24 p-4 border-r-2">
+      <dt class="text-xl font-bold">Size</dt>
+      <dd class="text-gray-600">{{size}}</dd>
+    </dl>
+    <dl class="w-24 p-4">
+      <dt class="text-xl font-bold">Replicas</dt>
+      <dd class="text-gray-600">{{replicas}}</dd>
+    </dl>
+  </div>
+
+</div>
