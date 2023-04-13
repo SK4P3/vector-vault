@@ -5,7 +5,7 @@ import "fmt"
 func EmptyVectorStore(storeConfig VectorStoreConfig) *VectorStore {
 	store := VectorStore{
 		config:  storeConfig,
-		data:    []dataEntry{{Title: "Test Title", Content: "Test Content", Vector: []float32{0.420}}},
+		data:    []dataEntry{},
 		vectors: []vectorEntry{},
 	}
 
