@@ -1,35 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	"vector-vault/vectors"
 	"vector-vault/vectorstore"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// router := gin.Default()
+	router := gin.Default()
 
-	// godotenv.Load(".env")
+	godotenv.Load(".env")
 
-	// router.GET("/query/text", searchText)
+	router.GET("/query/text", searchText)
 
-	// router.Run("localhost:8080")
-
-	var vector1 = vectors.GeoVector{}
-	vector1[0] = 47.384350
-	vector1[1] = 13.462740
-
-	var vector2 = vectors.GeoVector{}
-	vector2[0] = 47.384148
-	vector2[1] = 13.462639
-
-	store := vectorstore.PersistentVectorStore("./mockStore/")
-
-	fmt.Println(vector1.CosineSimilarity(vector2))
-	fmt.Println(len(store.GetByKey(0).Vector))
+	router.Run("localhost:8080")
 }
 
 // todo use vector type
