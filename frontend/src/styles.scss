@@ -4,7 +4,29 @@
 
 .listContainer:hover {
   cursor: pointer;
+
   .title {
     text-decoration: underline;
   }
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-200
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-400
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-600
 }

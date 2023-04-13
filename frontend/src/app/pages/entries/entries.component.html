@@ -1,4 +1,3 @@
-<h1 class="text-2xl font-bold mb-8">Index: {{data.Name}}</h1>
 <div class="grid grid-cols-4 gap-4 mb-8">
   <div class="h-32 w-full border shadow-md rounded-md flex flex-col items-center justify-center">
     <dt class="mb-2 text-3xl font-extrabold">{{data.Entries}}</dt>
@@ -17,22 +16,30 @@
     <dd class="text-gray-600">Vector Length</dd>
   </div>
 </div>
+<h1 class="text-3xl font-bold">Index: {{data.Name}}</h1>
 <div class="flex justify-between items-center mb-8">
   <h2 class="text-2xl font-bold">Entries:</h2>
   <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md">Add +</button>
 </div>
 
-<div class="w-full h-16 border shadow-md rounded-md p-4 font-medium flex items-center justify-between listContainer">
-  <dt class="text-xl font-bold title">Name</dt>
-  <div class="flex items-center">
-    <dl class="w-30 px-4 border-r-2">
-      <dt class="text-lg font-bold">Vector Type</dt>
-      <dd class="text-gray-600">GptEmbeddingVector</dd>
-    </dl>
-    <dl class="w-30 px-4">
-      <dt class="text-lg font-bold">Vector Length</dt>
-      <dd class="text-gray-600">1536</dd>
-    </dl>
-    <b class="px-4">▾</b>
+<div class="grid grid-cols-1 gap-4">
+  <div class="w-full h-16 border shadow-md rounded-md p-4 font-medium flex items-center justify-between duration-150 listContainer" *ngFor="let item of entries" [ngClass]="item.expanded == true ? 'h-32' : 'h-16'" (click)="expandItem($event, item)">
+    <dt class="text-xl font-bold title">{{item.entry.Title}}</dt>
+    <div class="flex items-center">
+      <dl class="w-30 px-4 border-r-2">
+        <dt class="text-lg font-bold">Vector Type</dt>
+        <dd class="text-gray-600">{{data.VectorType}}</dd>
+      </dl>
+      <dl class="w-30 px-4">
+        <dt class="text-lg font-bold">{{data.VectorLength}}</dt>
+        <dd class="text-gray-600">1536</dd>
+      </dl>
+      <b class="px-4" *ngIf="item.expanded">▴</b>
+      <b class="px-4" *ngIf="!item.expanded">▾</b>
+    </div>
   </div>
+</div>
+
+<div class="my-8">
+  Pagination
 </div>

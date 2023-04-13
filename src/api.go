@@ -25,6 +25,7 @@ func main() {
 
 	store = vectorstore.PersistentVectorStore(os.Getenv("STORE_LOCATION"))
 
+	router.GET("/api/health", health)
 	router.GET("/api/stats", getIndexData)
 
 	router.GET("/api/query/text", searchText)
@@ -37,6 +38,10 @@ func main() {
 	router.PUT("/api/entry", updateEntry)
 
 	router.Run("localhost:8080")
+}
+
+func health(c *gin.Context) {
+	c.JSON(http.StatusOK, "Im Ok! Thanks for asking!")
 }
 
 func getIndexData(c *gin.Context) {

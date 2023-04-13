@@ -16,6 +16,12 @@ export interface IndexDataResponse {
   VectorLength: number
 }
 
+export interface IndexEntry {
+  Title: string
+  Content: string
+  Vector: number[]
+}
+
 export interface Size {
   value: number
   unit: SizeUnit

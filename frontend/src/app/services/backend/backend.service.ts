@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Index, IndexDataResponse } from 'src/app/models/interfaces';
+import { Index, IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +15,23 @@ export class BackendService {
   }
 
   getIndex(name: string): Index {
-    return this.getIndices().filter((index: Index) => { return index.name == name})[0]
+    return this.getIndices().filter((index: Index) => { return index.name == name })[0]
   }
 
-  async getIndexData(name: string) {
-    let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
+  async getIndexData(name: string): Promise<IndexDataResponse> {
+    // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
     let response = await (await fetch("/api/stats")).json() as IndexDataResponse
+    return response
+  }
+
+  // todo only return data without vector, make different call when vector is required?
+  async getIndexEntries(name: string, from: number, to: number): Promise<IndexEntry[]> {
+    // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
+    let params = new URLSearchParams({
+      "from": from.toString(),
+      "to": to.toString(),
+    })
+    let response = await (await fetch("/api/entry/list?" + params)).json() as IndexEntry[]
     return response
   }
 }

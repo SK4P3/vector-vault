@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IndexDataResponse } from 'src/app/models/interfaces';
+import { IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
 import { BackendService } from 'src/app/services/backend/backend.service';
+
+interface IndexEntryListItem {
+  entry: IndexEntry
+  expanded: boolean
+}
 
 @Component({
   selector: 'app-entries',
@@ -13,6 +18,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
   private sub: any;
 
   data: IndexDataResponse = { Name: "", Entries: 0, Size: "", VectorLength: 0, VectorType: "" }
+  entries: IndexEntryListItem[] = []
+  expandedEntries: number[] = []
 
   constructor(private route: ActivatedRoute, private backend: BackendService) {
 
@@ -27,6 +34,15 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   async initData() {
     this.data = await this.backend.getIndexData(this.name);
+    this.getEntries(0, 10)
+  }
+
+  async getEntries(from: number, to: number) {
+    this.entries.push(...(await this.backend.getIndexEntries(this.name, from, to)).map(item => { return { entry: item, expanded: false } }))
+  }
+
+  expandItem(event: any, item: IndexEntryListItem) {
+    item.expanded = !item.expanded
   }
 
   ngOnDestroy() {
