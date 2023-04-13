@@ -3,6 +3,7 @@ package vectorstore
 import (
 	"sync"
 	"time"
+	"vector-vault/utils"
 )
 
 type similarityEntry struct {
@@ -25,7 +26,7 @@ func collectResult(wg *sync.WaitGroup, channel chan similarityEntry, similarityL
 
 func (store *VectorStore) getTopNVectors(query []float32, n int) []similarityEntry {
 
-	defer timeTrack(time.Now(), "Top Vectors by query")
+	defer utils.TimeTrack(time.Now(), "Top Vectors by query")
 
 	similarityChan := make(chan similarityEntry, 1)
 	var similarityList []similarityEntry

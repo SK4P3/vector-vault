@@ -2,7 +2,7 @@ package vectorstore
 
 // it would take ~1.000.000 Years for 18 quintillion liters of water to fall down the Niagara Falls
 
-type dataEntry struct {
+type DataEntry struct {
 	Title   string
 	Content string
 	Vector  []float32
@@ -15,7 +15,7 @@ type vectorEntry struct {
 
 type VectorStore struct {
 	config  VectorStoreConfig
-	data    []dataEntry
+	data    []DataEntry
 	vectors []vectorEntry
 }
 

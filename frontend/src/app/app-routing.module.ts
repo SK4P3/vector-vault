@@ -6,10 +6,11 @@ import { IndicesComponent } from './pages/indices/indices.component';
 import { EntriesComponent } from './pages/entries/entries.component';
 
 const routes: Routes = [
-  {path: "dashboard", component: DashboardComponent},
-  {path: "indices", component: IndicesComponent},
-  {path: "entries", component: EntriesComponent},
-  {path: "search", component: SearchComponent}
+  { path: "dashboard", component: DashboardComponent },
+  { path: "indices", component: IndicesComponent },
+  { path: "entries", component: EntriesComponent },
+  { path: 'entries/:name', component: EntriesComponent },
+  { path: "search", component: SearchComponent }
 ];
 
 @NgModule({

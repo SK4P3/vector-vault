@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.listContainer:hover {
+  cursor: pointer;
+  .title {
+    text-decoration: underline;
+  }
+}

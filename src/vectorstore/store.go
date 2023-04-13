@@ -1,11 +1,24 @@
 package vectorstore
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"reflect"
+	"vector-vault/utils"
+)
+
+type IndexData struct {
+	Name         string
+	Entries      int
+	Size         string
+	VectorType   string
+	VectorLength int
+}
 
 func EmptyVectorStore(storeConfig VectorStoreConfig) *VectorStore {
 	store := VectorStore{
 		config:  storeConfig,
-		data:    []dataEntry{},
+		data:    []DataEntry{},
 		vectors: []vectorEntry{},
 	}
 
@@ -18,7 +31,7 @@ func PersistentVectorStore(path string) *VectorStore {
 			Name:           "",
 			PersistantPath: path,
 		},
-		data:    []dataEntry{},
+		data:    []DataEntry{},
 		vectors: []vectorEntry{},
 	}
 
@@ -27,24 +40,49 @@ func PersistentVectorStore(path string) *VectorStore {
 	return &store
 }
 
-func (store *VectorStore) Insert(entry dataEntry) {
+func (store *VectorStore) IndexData() IndexData {
+	size, _ := utils.DirSize(store.config.PersistantPath)
+	data := IndexData{
+		Name:         store.config.Name,
+		Entries:      len(store.data) - 1,
+		Size:         fmt.Sprint(size, " bytes"),
+		VectorType:   fmt.Sprint(reflect.TypeOf(store.data[0].Vector)),
+		VectorLength: len(store.data[0].Vector),
+	}
+	return data
+}
+
+func (store *VectorStore) ListData(from int, to int) ([]DataEntry, error) {
+	length := len(store.data) - 1
+	if from > length || to > length {
+		return nil, errors.New("Error: Index out of bounds!")
+	}
+	return store.data[from:to], nil
+}
+
+func (store *VectorStore) GetEntry(idx int) (DataEntry, error) {
+	length := len(store.data) - 1
+	if idx > length {
+		return DataEntry{}, errors.New("Error: Index out of bounds!")
+	}
+	return store.data[idx], nil
+}
+
+func (store *VectorStore) Insert(entry DataEntry) int {
 	store.data = append(store.data, entry)
+	return len(store.data) - 1
 }
 
 func (store *VectorStore) Remove(index int) {
 	store.data = append(store.data[:index], store.data[index+1:]...)
 }
 
-func (store *VectorStore) SimilaritySearch(query []float32, n int) []dataEntry {
-	result := []dataEntry{}
+func (store *VectorStore) SimilaritySearch(query []float32, n int) []DataEntry {
+	result := []DataEntry{}
 	for _, entry := range store.getTopNVectors(query, n) {
 		result = append(result, store.data[entry.dataIdx])
 	}
 	return result
-}
-
-func (store *VectorStore) GetByKey(key int) dataEntry {
-	return store.data[key]
 }
 
 func (store *VectorStore) Dumps() string {
