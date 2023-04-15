@@ -13,7 +13,7 @@ export interface IndexDataResponse {
   Entries: number
   Size: string
   VectorType: string
-  VectorLength: number
+  VectorDimension: number
 }
 
 export interface IndexEntry {

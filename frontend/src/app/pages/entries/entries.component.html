@@ -1,3 +1,23 @@
+<div class="absolute w-screen h-screen top-0 left-0 z-10 bg-black/30 flex items-center justify-center" [@inOutAnimation] *ngIf="entryModalVisible">
+  <div class="w-1/2 h-1/2 bg-white rounded-md p-4 flex flex-col gap-4">
+    <b class="text-2xl">Add Entry</b>
+    <label class="font-medium -mb-2">Title:</label>
+    <input class="w-full p-2 rounded-md outline-none border">
+    <label class="font-medium -mb-2">Content:</label>
+    <textarea class="w-full p-2 rounded-md outline-none border" rows="25"></textarea>
+    <label class="font-medium -mb-2">Vector:</label>
+    <div class="relative h-max">
+      <input class="w-full p-2 rounded-md outline-none border" disabled>
+      <button class="absolute right-0 top-0 h-full w-20 flex items-center justify-center rounded-r-md bg-neutral-900 text-white font-bold">Generate</button>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <button class="w-24 h-8 font-medium text-white border bg-gray-400 rounded-md" (click)="showAddEntryModal()">Cancel</button>
+      <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="grid grid-cols-4 gap-4 mb-8">
   <div class="h-32 w-full border shadow-md rounded-md flex flex-col items-center justify-center">
     <dt class="mb-2 text-3xl font-extrabold">{{data.Entries}}</dt>
@@ -12,31 +32,47 @@
     <dd class="text-gray-600">Vector Type</dd>
   </div>
   <div class="h-32 w-full border shadow-md rounded-md flex flex-col items-center justify-center">
-    <dt class="mb-2 text-3xl font-extrabold">{{data.VectorLength}}</dt>
-    <dd class="text-gray-600">Vector Length</dd>
+    <dt class="mb-2 text-3xl font-extrabold">{{data.VectorDimension}}</dt>
+    <dd class="text-gray-600">Vector Dimension</dd>
   </div>
 </div>
 <h1 class="text-3xl font-bold">Index: {{data.Name}}</h1>
 <div class="flex justify-between items-center mb-8">
   <h2 class="text-2xl font-bold">Entries:</h2>
-  <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md">Add +</button>
+  <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md" (click)="showAddEntryModal()">Add +</button>
 </div>
 
 <div class="grid grid-cols-1 gap-4">
-  <div class="w-full h-16 border shadow-md rounded-md p-4 font-medium flex items-center justify-between duration-150 listContainer" *ngFor="let item of entries" [ngClass]="item.expanded == true ? 'h-32' : 'h-16'" (click)="expandItem($event, item)">
-    <dt class="text-xl font-bold title">{{item.entry.Title}}</dt>
-    <div class="flex items-center">
-      <dl class="w-30 px-4 border-r-2">
-        <dt class="text-lg font-bold">Vector Type</dt>
-        <dd class="text-gray-600">{{data.VectorType}}</dd>
-      </dl>
-      <dl class="w-30 px-4">
-        <dt class="text-lg font-bold">{{data.VectorLength}}</dt>
-        <dd class="text-gray-600">1536</dd>
-      </dl>
-      <b class="px-4" *ngIf="item.expanded">▴</b>
-      <b class="px-4" *ngIf="!item.expanded">▾</b>
+  <div class="w-full border shadow-md rounded-md px-4 py-2 font-medium flex duration-200 transition-all overflow-hidden " *ngFor="let item of entries" [ngClass]="item.expanded == true ? 'h-80' : 'h-16'">
+
+    <div class="w-3/4">
+      <h3 class="text-lg font-bold">{{item.entry.Title}}</h3>
+      <p class="text-md " [ngClass]="item.expanded == true ? 'overflow-y-scroll h-full pb-6' : ''">{{item.entry.Content}}</p>
     </div>
+
+    <div class="flex flex-col w-1/4">
+      <div class="flex items-start justify-center h-max">
+        <dl class="w-[45%] px-4 border-r-2">
+          <dt class="text-lg font-bold">Vector Type</dt>
+          <dd class="text-gray-600">{{data.VectorType}}</dd>
+        </dl>
+        <dl class="w-[60%] px-4">
+          <dt class="text-lg font-bold">Vector Dimension</dt>
+          <dd class="text-gray-600">{{data.VectorDimension}}</dd>
+        </dl>
+        <div class="flex items-center h-12 cursor-pointer" (click)="expandItem($event, item)">
+          <b class="px-4" *ngIf="item.expanded">▴</b>
+          <b class="px-4" *ngIf="!item.expanded">▾</b>
+        </div>
+      </div>
+      <div *ngIf="item.expanded" class="flex flex-col items-start h-full px-4 pt-4">
+        <span class="text-lg font-bold">Metadata</span>
+        <dd class="text-gray-600">
+          coordinates: GeoVector1, 1
+        </dd>
+      </div>
+    </div>
+
   </div>
 </div>
 

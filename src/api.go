@@ -19,6 +19,9 @@ type ErrorResponse struct {
 var store *vectorstore.VectorStore
 
 func main() {
+
+	// gin.SetMode(gin.ReleaseMode)
+
 	router := gin.Default()
 
 	godotenv.Load(".env")
@@ -52,7 +55,7 @@ func getIndexData(c *gin.Context) {
 func listEntries(c *gin.Context) {
 	from, err := strconv.Atoi(c.Query("from"))
 	to, err := strconv.Atoi(c.Query("to"))
-	data, err := store.ListData(from, to)
+	data, err := store.ListData(from, to+1)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Message: "Error: " + fmt.Sprint(err)})
 		return

@@ -8,11 +8,11 @@ import (
 )
 
 type IndexData struct {
-	Name         string
-	Entries      int
-	Size         string
-	VectorType   string
-	VectorLength int
+	Name            string
+	Entries         int
+	Size            string
+	VectorType      string
+	VectorDimension int
 }
 
 func EmptyVectorStore(storeConfig VectorStoreConfig) *VectorStore {
@@ -43,17 +43,17 @@ func PersistentVectorStore(path string) *VectorStore {
 func (store *VectorStore) IndexData() IndexData {
 	size, _ := utils.DirSize(store.config.PersistantPath)
 	data := IndexData{
-		Name:         store.config.Name,
-		Entries:      len(store.data) - 1,
-		Size:         fmt.Sprint(size, " bytes"),
-		VectorType:   fmt.Sprint(reflect.TypeOf(store.data[0].Vector)),
-		VectorLength: len(store.data[0].Vector),
+		Name:            store.config.Name,
+		Entries:         len(store.data),
+		Size:            fmt.Sprint(size, " bytes"),
+		VectorType:      fmt.Sprint(reflect.TypeOf(store.data[0].Vector)),
+		VectorDimension: len(store.data[0].Vector),
 	}
 	return data
 }
 
 func (store *VectorStore) ListData(from int, to int) ([]DataEntry, error) {
-	length := len(store.data) - 1
+	length := len(store.data)
 	if from > length || to > length {
 		return nil, errors.New("Error: Index out of bounds!")
 	}
