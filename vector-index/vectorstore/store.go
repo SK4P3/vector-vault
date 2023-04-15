@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"vector-vault/utils"
+	"vector-index/utils"
 )
 
 type IndexData struct {

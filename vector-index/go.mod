@@ -1,4 +1,4 @@
-module vector-vault
+module vector-index
 
 go 1.20
 

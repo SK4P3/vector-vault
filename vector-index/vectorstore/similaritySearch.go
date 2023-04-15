@@ -3,7 +3,7 @@ package vectorstore
 import (
 	"sync"
 	"time"
-	"vector-vault/utils"
+	"vector-index/utils"
 )
 
 type similarityEntry struct {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	"vector-vault/utils"
+	"vector-index/utils"
 
 	openaiAip "github.com/sashabaranov/go-openai"
 )

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"vector-vault/openai"
-	"vector-vault/vectorstore"
+	"vector-index/openai"
+	"vector-index/vectorstore"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
