@@ -74,7 +74,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   async initData() {
     this.data = await this.backend.getIndexData(this.name);
-    this.getEntries(995, 1002)
+    this.getEntries(995, 1000)
   }
 
   async getEntries(from: number, to: number) {
