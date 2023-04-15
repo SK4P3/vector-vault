@@ -2,18 +2,18 @@
   <div class="w-1/2 h-1/2 bg-white rounded-md p-4 flex flex-col gap-4">
     <b class="text-2xl">Add Entry</b>
     <label class="font-medium -mb-2">Title:</label>
-    <input class="w-full p-2 rounded-md outline-none border">
+    <input class="w-full p-2 rounded-md outline-none border" [(ngModel)]="entryModalData.Title">
     <label class="font-medium -mb-2">Content:</label>
-    <textarea class="w-full p-2 rounded-md outline-none border" rows="25"></textarea>
+    <textarea class="w-full p-2 rounded-md outline-none border" rows="25" [(ngModel)]="entryModalData.Content"></textarea>
     <label class="font-medium -mb-2">Vector:</label>
     <div class="relative h-max">
-      <input class="w-full p-2 rounded-md outline-none border" disabled>
-      <button class="absolute right-0 top-0 h-full w-20 flex items-center justify-center rounded-r-md bg-neutral-900 text-white font-bold">Generate</button>
+      <input class="w-full p-2 rounded-md outline-none border" disabled [(ngModel)]="entryModalData.Vector">
+      <button class="absolute right-0 top-0 h-full w-20 flex items-center justify-center rounded-r-md bg-neutral-900 text-white font-bold" (click)="getEmbedding()">Generate</button>
     </div>
 
     <div class="flex justify-end gap-4">
       <button class="w-24 h-8 font-medium text-white border bg-gray-400 rounded-md" (click)="showAddEntryModal()">Cancel</button>
-      <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md">Save</button>
+      <button class="w-24 h-8 font-medium text-white border bg-emerald-500 rounded-md" (click)="saveEntry()">Save</button>
     </div>
   </div>
 </div>

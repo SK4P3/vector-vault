@@ -11,6 +11,7 @@ import { IndicesComponent } from './pages/indices/indices.component';
 import { EntriesComponent } from './pages/entries/entries.component';
 import { IndexEntryComponent } from './components/index-entry/index-entry.component';
 import { IndexStatusComponent } from './components/index-status/index-status.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { IndexStatusComponent } from './components/index-status/index-status.com
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [],

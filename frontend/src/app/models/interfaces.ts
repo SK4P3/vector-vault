@@ -8,6 +8,22 @@ export interface Index {
   replicas: number
 }
 
+export interface GetEmbeddingRequest {
+  Content: string
+}
+
+export interface GetEmbeddingResponse {
+  Embedding: number[]
+}
+
+export interface AddEntryRequest {
+  Entry: IndexEntry
+}
+
+export interface AddEntryResponse {
+  Idx: number
+}
+
 export interface IndexDataResponse {
   Name: string
   Entries: number

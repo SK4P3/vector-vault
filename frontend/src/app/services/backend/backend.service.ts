@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Index, IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
+import { AddEntryRequest, AddEntryResponse, GetEmbeddingRequest, GetEmbeddingResponse, Index, IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +18,20 @@ export class BackendService {
     return this.getIndices().filter((index: Index) => { return index.name == name })[0]
   }
 
+  async getEmbeddingAda2(content: string): Promise<GetEmbeddingResponse> {
+    let reqBody: GetEmbeddingRequest = {
+      Content: content
+    }
+    let response = await (await fetch("/api/embedding/ada", { method: "POST", body: JSON.stringify(reqBody) })).json() as GetEmbeddingResponse
+    return response
+  }
+
   async getIndexData(name: string): Promise<IndexDataResponse> {
     // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
     let response = await (await fetch("/api/stats")).json() as IndexDataResponse
     return response
   }
 
-  // todo only return data without vector, make different call when vector is required?
   async getIndexEntries(name: string, from: number, to: number): Promise<IndexEntry[]> {
     // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
     let params = new URLSearchParams({
@@ -32,6 +39,13 @@ export class BackendService {
       "to": to.toString(),
     })
     let response = await (await fetch("/api/entry/list?" + params)).json() as IndexEntry[]
+    return response
+  }
+
+  async addEntry(entry: IndexEntry): Promise<AddEntryResponse> {
+    // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
+    let reqBody: AddEntryRequest = { Entry: entry }
+    let response = await (await fetch("/api/entry", { method: "POST", body: JSON.stringify(reqBody) })).json() as AddEntryResponse
     return response
   }
 }

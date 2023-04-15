@@ -12,6 +12,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// todo refactor api to use only http response
+type HttpResponse struct {
+	Message string
+}
+
 type ErrorResponse struct {
 	Message string
 }
@@ -31,6 +36,7 @@ func main() {
 	router.GET("/api/health", health)
 	router.GET("/api/stats", getIndexData)
 
+	router.POST("/api/embedding/ada", getEmbeddingAda2)
 	router.GET("/api/query/text", searchText)
 
 	router.GET("/api/entry/list", listEntries)
@@ -73,13 +79,22 @@ func getEntry(c *gin.Context) {
 	c.JSON(http.StatusOK, entry)
 }
 
+type AddEntryRequest struct {
+	// todo make array
+	Entry vectorstore.DataEntry
+}
+
+type AddEntryResponse struct {
+	Idx int
+}
+
 func addEntry(c *gin.Context) {
-	var entryToAdd vectorstore.DataEntry
-	if err := c.BindJSON(&entryToAdd); err != nil {
+	var body AddEntryRequest
+	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Message: "Error: " + fmt.Sprint(err)})
 		return
 	}
-	added := store.Insert(entryToAdd)
+	added := store.Insert(body.Entry)
 	c.JSON(http.StatusOK, added)
 }
 
@@ -99,6 +114,24 @@ func updateEntry(c *gin.Context) {
 
 func searchText(c *gin.Context) {
 
+}
+
+type GetEmbeddingRequest struct {
+	Content string
+}
+
+type GetEmbeddingResponse struct {
+	Embedding []float32
+}
+
+func getEmbeddingAda2(c *gin.Context) {
+	var body GetEmbeddingRequest
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Message: "Error: " + fmt.Sprint(err)})
+		return
+	}
+	user_embedding := openai.EmbeddingAda2(body.Content)
+	c.JSON(http.StatusOK, GetEmbeddingResponse{Embedding: user_embedding})
 }
 
 func searchTextB(c *gin.Context) {

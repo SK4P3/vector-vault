@@ -47,6 +47,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   expandedEntries: number[] = []
 
   entryModalVisible: boolean = false
+  entryModalData: IndexEntry = { Title: "", Content: "", Vector: [] }
 
   constructor(private route: ActivatedRoute, private backend: BackendService) {
 
@@ -59,15 +60,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  async initData() {
-    this.data = await this.backend.getIndexData(this.name);
-    this.getEntries(995, 1000)
-  }
-
-  async getEntries(from: number, to: number) {
-    this.entries.push(...(await this.backend.getIndexEntries(this.name, from, to)).map(item => { return { entry: item, expanded: false } }))
-  }
-
   expandItem(event: any, item: IndexEntryListItem) {
     item.expanded = !item.expanded
   }
@@ -78,6 +70,26 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  async initData() {
+    this.data = await this.backend.getIndexData(this.name);
+    this.getEntries(995, 1002)
+  }
+
+  async getEntries(from: number, to: number) {
+    this.entries.push(...(await this.backend.getIndexEntries(this.name, from, to)).map(item => { return { entry: item, expanded: false } }))
+  }
+
+  async saveEntry() {
+    console.log(this.entryModalData);
+    await this.backend.addEntry(this.entryModalData)
+    this.entryModalData = { Title: "", Content: "", Vector: [] }
+  }
+
+  async getEmbedding() {
+    let embedding = await this.backend.getEmbeddingAda2(this.entryModalData.Content)
+    this.entryModalData.Vector = embedding.Embedding
   }
 
 }
