@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
+import { Index, IndexDataResponse, IndexEntry } from 'src/app/models/interfaces';
 import { BackendService } from 'src/app/services/backend/backend.service';
 
 interface IndexEntryListItem {
@@ -41,6 +41,7 @@ interface IndexEntryListItem {
 export class EntriesComponent implements OnInit, OnDestroy {
   name!: string;
   private sub: any;
+  index!: Index;
 
   data: IndexDataResponse = { Name: "", Entries: 0, Size: "", VectorDimension: 0, VectorType: "" }
   entries: IndexEntryListItem[] = []
@@ -50,12 +51,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
   entryModalData: IndexEntry = { Title: "", Content: "", Vector: [] }
 
   constructor(private route: ActivatedRoute, private backend: BackendService) {
-
   }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.name = params['name'];
+      this.index = this.backend.getIndex(this.name)
       this.initData();
     });
   }
@@ -73,12 +74,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   async initData() {
-    this.data = await this.backend.getIndexData(this.name);
+    this.data = await this.backend.getIndexData(this.index);
     this.getEntries(995, 1000)
   }
 
   async getEntries(from: number, to: number) {
-    this.entries.push(...(await this.backend.getIndexEntries(this.name, from, to)).map(item => { return { entry: item, expanded: false } }))
+    this.entries.push(...(await this.backend.getIndexEntries(this.index, from, to)).map(item => { return { entry: item, expanded: false } }))
   }
 
   async saveEntry() {

@@ -33,18 +33,18 @@ func main() {
 
 	store = vectorstore.PersistentVectorStore(os.Getenv("STORE_LOCATION"))
 
-	router.GET("/api/health", health)
-	router.GET("/api/stats", getIndexData)
+	router.GET("/health", health)
+	router.GET("/stats", getIndexData)
 
-	router.POST("/api/embedding/ada", getEmbeddingAda2)
-	router.GET("/api/query/text", searchText)
+	router.POST("/embedding/ada", getEmbeddingAda2)
+	router.GET("/query/text", searchText)
 
-	router.GET("/api/entry/list", listEntries)
+	router.GET("/entry/list", listEntries)
 
-	router.GET("/api/entry", getEntry)
-	router.POST("/api/entry", addEntry)
-	router.DELETE("/api/entry", removeEntry)
-	router.PUT("/api/entry", updateEntry)
+	router.GET("/entry", getEntry)
+	router.POST("/entry", addEntry)
+	router.DELETE("/entry", removeEntry)
+	router.PUT("/entry", updateEntry)
 
 	router.Run("localhost:8080")
 }
