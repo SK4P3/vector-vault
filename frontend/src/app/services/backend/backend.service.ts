@@ -13,7 +13,8 @@ export class BackendService {
 
   getIndices(): Index[] {
     return [
-      { name: "Mock", url: "http://localhost:8080/", entries: 1, size: "100 Kb", replicas: 1 }
+      { name: "Mock", url: "http://localhost:8080/", entries: 1, size: "100 Kb", replicas: 1 },
+      { name: "Radstadt", url: "http://localhost:8081/", entries: 1, size: "100 Kb", replicas: 1 }
     ]
   }
 
@@ -22,7 +23,7 @@ export class BackendService {
   }
 
   async indexGetRequest(index: Index, endpoint: string, params: URLSearchParams | undefined = undefined) {
-    let url = `/api${index.name.toLocaleLowerCase()}/${endpoint}`
+    let url = `/api/${index.name.toLocaleLowerCase()}/${endpoint}`
     if (params != undefined) {
       url += '?' + params
     }
@@ -31,19 +32,32 @@ export class BackendService {
   }
 
   async indexPostRequest(index: Index, endpoint: string, body: any) {
+    let url = `/api/${index.name.toLocaleLowerCase()}/${endpoint}`
+    console.log(url);
 
+    let response =  await (await fetch(url, { method: "POST", body: JSON.stringify(body) })).json()
+    return response
   }
 
-  async getEmbeddingAda2(content: string): Promise<GetEmbeddingResponse> {
+  async getHealth(index: Index): Promise<boolean> {
+    try {
+      let response = await this.indexGetRequest(index, "health")
+      return response == "Im Ok! Thanks for asking!"
+    } catch {
+      return false
+    }
+  }
+
+  async getEmbeddingAda2(index: Index, content: string): Promise<GetEmbeddingResponse> {
     let reqBody: GetEmbeddingRequest = {
       Content: content
     }
-    let response = await (await fetch("/api/mock/embedding/ada", { method: "POST", body: JSON.stringify(reqBody) })).json() as GetEmbeddingResponse
+    let response = await this.indexPostRequest(index, "embedding/ada", reqBody) as GetEmbeddingResponse
     return response
   }
 
   async getIndexData(index: Index): Promise<IndexDataResponse> {
-    let response = await this.indexGetRequest(index, "/stats") as IndexDataResponse
+    let response = await this.indexGetRequest(index, "stats") as IndexDataResponse
     return response
   }
 
@@ -52,14 +66,14 @@ export class BackendService {
       "from": from.toString(),
       "to": to.toString(),
     })
-    let response = await this.indexGetRequest(index, "/entry/list", params) as IndexEntry[]
+    let response = await this.indexGetRequest(index, "entry/list", params) as IndexEntry[]
     return response
   }
 
-  async addEntry(entry: IndexEntry): Promise<AddEntryResponse> {
+  async addEntry(index: Index, entry: IndexEntry): Promise<AddEntryResponse> {
     // let index = this.getIndices().filter((index: Index) => { return index.name == name})[0]
     let reqBody: AddEntryRequest = { Entry: entry }
-    let response = await (await fetch("/api/mock/entry", { method: "POST", body: JSON.stringify(reqBody) })).json() as AddEntryResponse
+    let response = await this.indexPostRequest(index, "entry", reqBody) as AddEntryResponse
     return response
   }
 }

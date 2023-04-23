@@ -8,5 +8,5 @@
       <button class="h-full px-2 py-1 bg-white font-medium text-neutral-900 border shadow-md rounded-md">Ξ Sort by</button>
     </div>
   </div>
-  <app-index-entry *ngFor="let index of indecies" [indexName]="index.name" [url]="index.url" [entries]="index.entries.toString()" [size]="index.size" [replicas]="index.replicas.toString()"></app-index-entry>
+  <app-index-entry *ngFor="let index of indecies" [index]="index"></app-index-entry>
 </div>

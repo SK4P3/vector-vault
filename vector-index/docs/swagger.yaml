@@ -1,0 +1,265 @@
+definitions:
+  main.AddEntryRequest:
+    properties:
+      entry:
+        $ref: '#/definitions/vectorstore.DataEntry'
+    type: object
+  main.AddEntryResponse:
+    properties:
+      idx:
+        type: integer
+    type: object
+  main.GetEmbeddingRequest:
+    properties:
+      content:
+        type: string
+    type: object
+  main.GetEmbeddingResponse:
+    properties:
+      embedding:
+        items:
+          type: number
+        type: array
+    type: object
+  main.GetTopNEntriesRequest:
+    properties:
+      queryVector:
+        items:
+          type: number
+        type: array
+      topN:
+        type: integer
+    type: object
+  main.GetTopNEntriesResponse:
+    properties:
+      entries:
+        items:
+          $ref: '#/definitions/vectorstore.DataEntry'
+        type: array
+    type: object
+  vectorstore.DataEntry:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+      vector:
+        items:
+          type: number
+        type: array
+    type: object
+  vectorstore.IndexData:
+    properties:
+      entries:
+        type: integer
+      name:
+        type: string
+      size:
+        type: string
+      vectorDimension:
+        type: integer
+      vectorType:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /embedding/ada:
+    post:
+      consumes:
+      - application/json
+      description: Get the vector representation of a given Input string accordint
+        to the OpenAI ada2 embedding model
+      parameters:
+      - description: Strig to convert to Embedding
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.GetEmbeddingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GetEmbeddingResponse'
+      summary: Get OpenAI ada2 Embedding
+      tags:
+      - OpenAI
+  /entry:
+    delete:
+      consumes:
+      - application/json
+      description: Remove Entry at index i from the store and save the updated index
+        version to persistent storage
+      parameters:
+      - description: Entry idx to delete
+        in: query
+        name: idx
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Remove a specific Entry
+      tags:
+      - Entry
+    get:
+      consumes:
+      - application/json
+      description: Get Entry at index i from the store data
+      parameters:
+      - description: Entry idx
+        in: query
+        name: idx
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vectorstore.DataEntry'
+      summary: Get a specific Entry
+      tags:
+      - Entry
+    post:
+      consumes:
+      - application/json
+      description: Append a data entry to the vector store and save the updated index
+        version to persistent storage
+      parameters:
+      - description: Entry to add
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.AddEntryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.AddEntryResponse'
+      summary: Add an entry to the vector store
+      tags:
+      - Entry
+  /entry/list:
+    get:
+      consumes:
+      - application/json
+      description: Get the data entries in the Vector store from 'from' to 'to'
+      parameters:
+      - description: from idx
+        in: query
+        name: from
+        required: true
+        type: integer
+      - description: to idx
+        in: query
+        name: to
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/vectorstore.DataEntry'
+            type: array
+      summary: List entries in the given range
+      tags:
+      - Entry
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Ping Index for a simple Helath Check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Check if Index is online
+      tags:
+      - Health
+  /query/embedding:
+    post:
+      consumes:
+      - application/json
+      description: Query vector store using an embedding vector and get top N results
+        besed on cosine similarity, faster as there is no extra requst to the embedding
+        api
+      parameters:
+      - description: Query Vector, and TopN Results
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.GetTopNEntriesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GetTopNEntriesResponse'
+      summary: Query vector store using an embedding vector
+      tags:
+      - Query
+  /query/text:
+    get:
+      consumes:
+      - application/json
+      description: Query vector store using a string that will be converted to an
+        embedding vector and get top N results besed on cosine similarity
+      parameters:
+      - description: query string
+        in: query
+        name: query
+        required: true
+        type: string
+      - description: top n results
+        in: query
+        name: topn
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/vectorstore.DataEntry'
+            type: array
+      summary: Query vector store using a string
+      tags:
+      - Query
+  /stats:
+    get:
+      consumes:
+      - application/json
+      description: Get Index data including Name, Entries, Size, VectorType, VectorDimension
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vectorstore.IndexData'
+      summary: Get some basic Index data
+      tags:
+      - Stats
+swagger: "2.0"

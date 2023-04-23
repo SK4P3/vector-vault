@@ -53,7 +53,7 @@ func (store *VectorStore) getTopNVectors(query []float32, n int) []similarityEnt
 	wg.Wait()
 
 	var similarityLength = len(similarityList)
-	var mostSimilarVectors = quickSortSimilarityStart(similarityList)[similarityLength-n : len(similarityList)]
+	var mostSimilarVectors = quickSortSimilarityStart(similarityList)[similarityLength-n : similarityLength]
 
 	return mostSimilarVectors
 }

@@ -44,12 +44,6 @@ func (store *VectorStore) loadPersistentData() {
 	store.loadVectors()
 }
 
-func (store *VectorStore) loadVectors() {
-	for index, data := range store.data {
-		store.vectors = append(store.vectors, vectorEntry{dataIdx: index, Vector: data.Vector})
-	}
-}
-
 func (store *VectorStore) Persist() {
 
 	if store.config.PersistantPath == "" {

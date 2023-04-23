@@ -70,6 +70,7 @@ func (store *VectorStore) GetEntry(idx int) (DataEntry, error) {
 
 func (store *VectorStore) Insert(entry DataEntry) int {
 	store.data = append(store.data, entry)
+	store.vectors = append(store.vectors, vectorEntry{dataIdx: len(store.data) - 1, Vector: entry.Vector})
 	return len(store.data) - 1
 }
 
@@ -92,4 +93,11 @@ func (store *VectorStore) Dumps() string {
 	storeString += "Vectors: \n"
 	storeString += fmt.Sprintf("%#v", store.vectors)
 	return storeString
+}
+
+func (store *VectorStore) loadVectors() {
+	store.vectors = []vectorEntry{}
+	for index, data := range store.data {
+		store.vectors = append(store.vectors, vectorEntry{dataIdx: index, Vector: data.Vector})
+	}
 }

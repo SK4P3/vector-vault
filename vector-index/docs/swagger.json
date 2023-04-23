@@ -1,0 +1,399 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/embedding/ada": {
+            "post": {
+                "description": "Get the vector representation of a given Input string accordint to the OpenAI ada2 embedding model",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OpenAI"
+                ],
+                "summary": "Get OpenAI ada2 Embedding",
+                "parameters": [
+                    {
+                        "description": "Strig to convert to Embedding",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.GetEmbeddingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.GetEmbeddingResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/entry": {
+            "get": {
+                "description": "Get Entry at index i from the store data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Entry"
+                ],
+                "summary": "Get a specific Entry",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Entry idx",
+                        "name": "idx",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/vectorstore.DataEntry"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Append a data entry to the vector store and save the updated index version to persistent storage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Entry"
+                ],
+                "summary": "Add an entry to the vector store",
+                "parameters": [
+                    {
+                        "description": "Entry to add",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.AddEntryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.AddEntryResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove Entry at index i from the store and save the updated index version to persistent storage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Entry"
+                ],
+                "summary": "Remove a specific Entry",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Entry idx to delete",
+                        "name": "idx",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/list": {
+            "get": {
+                "description": "Get the data entries in the Vector store from 'from' to 'to'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Entry"
+                ],
+                "summary": "List entries in the given range",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "from idx",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "to idx",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/vectorstore.DataEntry"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Ping Index for a simple Helath Check",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Check if Index is online",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/query/embedding": {
+            "post": {
+                "description": "Query vector store using an embedding vector and get top N results besed on cosine similarity, faster as there is no extra requst to the embedding api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Query vector store using an embedding vector",
+                "parameters": [
+                    {
+                        "description": "Query Vector, and TopN Results",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.GetTopNEntriesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.GetTopNEntriesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/query/text": {
+            "get": {
+                "description": "Query vector store using a string that will be converted to an embedding vector and get top N results besed on cosine similarity",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Query vector store using a string",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "query string",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "top n results",
+                        "name": "topn",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/vectorstore.DataEntry"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "description": "Get Index data including Name, Entries, Size, VectorType, VectorDimension",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get some basic Index data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/vectorstore.IndexData"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.AddEntryRequest": {
+            "type": "object",
+            "properties": {
+                "entry": {
+                    "$ref": "#/definitions/vectorstore.DataEntry"
+                }
+            }
+        },
+        "main.AddEntryResponse": {
+            "type": "object",
+            "properties": {
+                "idx": {
+                    "type": "integer"
+                }
+            }
+        },
+        "main.GetEmbeddingRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.GetEmbeddingResponse": {
+            "type": "object",
+            "properties": {
+                "embedding": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "main.GetTopNEntriesRequest": {
+            "type": "object",
+            "properties": {
+                "queryVector": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "topN": {
+                    "type": "integer"
+                }
+            }
+        },
+        "main.GetTopNEntriesResponse": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/vectorstore.DataEntry"
+                    }
+                }
+            }
+        },
+        "vectorstore.DataEntry": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "vector": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "vectorstore.IndexData": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "vectorDimension": {
+                    "type": "integer"
+                },
+                "vectorType": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -75,7 +75,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   async initData() {
     this.data = await this.backend.getIndexData(this.index);
-    this.getEntries(995, 1000)
+    this.getEntries(0, this.data.Entries-1)
   }
 
   async getEntries(from: number, to: number) {
@@ -84,12 +84,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   async saveEntry() {
     console.log(this.entryModalData);
-    await this.backend.addEntry(this.entryModalData)
+    await this.backend.addEntry(this.index, this.entryModalData)
     this.entryModalData = { Title: "", Content: "", Vector: [] }
   }
 
   async getEmbedding() {
-    let embedding = await this.backend.getEmbeddingAda2(this.entryModalData.Content)
+    let embedding = await this.backend.getEmbeddingAda2(this.index, this.entryModalData.Content)
     this.entryModalData.Vector = embedding.Embedding
   }
 
