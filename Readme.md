@@ -13,6 +13,7 @@ This project is still work in progress!
 ### NGINX
 
 - Used as a link between the management frontend and the vector index instances
+- Load Balancing
 - API Key authentication
 
 ### Vector Index

@@ -1,6 +1,7 @@
 package vectorstore
 
 import (
+	"fmt"
 	"sync"
 	"time"
 	"vector-index/utils"
@@ -52,8 +53,9 @@ func (store *VectorStore) getTopNVectors(query []float32, n int) []similarityEnt
 	go collectResult(&wg, similarityChan, &similarityList)
 	wg.Wait()
 
-	var similarityLength = len(similarityList)
-	var mostSimilarVectors = quickSortSimilarityStart(similarityList)[similarityLength-n : similarityLength]
+	var mostSimilarVectors = quickSortSimilarityStart(similarityList)[:n]
+
+	fmt.Println(mostSimilarVectors)
 
 	return mostSimilarVectors
 }
@@ -62,7 +64,7 @@ func partition(arr []similarityEntry, low, high int) ([]similarityEntry, int) {
 	pivot := arr[high]
 	i := low
 	for j := low; j < high; j++ {
-		if arr[j].Similarity < pivot.Similarity {
+		if arr[j].Similarity > pivot.Similarity {
 			arr[i], arr[j] = arr[j], arr[i]
 			i++
 		}
