@@ -10,10 +10,20 @@ This project is still work in progress!
 
 - Using the frontend it is possible to monitor, modify and manage indices
 
+### NGINX
+
+- Used as a link between the management frontend and the vector index instances
+- API Key authentication
+
 ### Vector Index
 
 - A Vector Index stores and manages the data and vectors
+- The vector index can be queried using vectors or strings
+- Using the Frontend entries can be added, updated and removed
 - There can be multiple replicas of each index
+
+#### Swagger API Documentation
+![swagger](https://raw.githubusercontent.com/SK4P3/vector-vault/master/docs/images/swagger.png)
 
 ## Usage
 
