@@ -2,7 +2,7 @@
 
 Simple Vector Database to store and query OpenAI Embedding Vectors.
 
-This project is still work in progress!
+This project is more me trying out golang than anything else. Please just use Postgres or a dedicated vector DB for storage :O
 
 ## Components
 
